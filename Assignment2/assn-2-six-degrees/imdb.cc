@@ -28,7 +28,7 @@ bool imdb::good() const
 bool imdb::getCredits(const string& player, vector<film>& films) const {
     int * numberOfActors = (int* ) actorFile ;
   char const  * playerC = player.c_str();
-  void *actor = binarySearch(playerC,0, *numberOfActors);
+  void *actor = binarySearch(playerC,0, *numberOfActors,1);
   char *actorChar = (char*) actor;
   if(actorChar == NULL)
     return false;
@@ -82,12 +82,17 @@ film imdb::getFilm(const int  pointer)const{
 void *imdb:: getPointerToMovieOffsets(const char * actorChar)const{
   return (void*) actorChar;
 }
- void* imdb::binarySearch(const char* player,int start, int end) const 
+void* imdb::binarySearch(const char* player,int start, int end, int actor) const 
 {
-  int * actorPointer = (int *) actorFile +1;
+  int * iterator;
+  if(actor == 1)
+    iterator =(int *) actorFile;
+  else
+    iterator =(int*) movieFile;
+  int * actorPointer = (int *) iterator +1;
   int index = start + (end-start)/2;
  actorPointer += index ;
-  char * middleActor = (char*) actorFile + *actorPointer;
+  char * middleActor = (char*) iterator + *actorPointer;
   int comparingResult = strcmp(player,middleActor);
   //base case
   if(start == end || index < start|| index > end)
@@ -95,12 +100,33 @@ void *imdb:: getPointerToMovieOffsets(const char * actorChar)const{
   if(comparingResult == 0)
     return (void*) middleActor;
   else if( comparingResult < 0)
-    return binarySearch(player,start,index-1);
+    return binarySearch(player,start,index-1,actor);
   else
-    return binarySearch(player, index+1,  end);
+    return binarySearch(player, index+1,  end,actor);
   
 }
-bool imdb::getCast(const film& movie, vector<string>& players) const { return false; }
+bool imdb::getCast(const film& movie, vector<string>& players) const {
+  char * movieNameToSearch =(char*) movie.title.c_str();
+  int * numberOfMovies = (int*) movieFile;
+  char * movieIterator = (char *) binarySearch(movieNameToSearch, 0, *numberOfMovies,0);
+  int length = strlen(movieIterator);
+  movieIterator += length;
+  movieIterator +=2;
+  //if the name + 2 bytes ( 1 for the null terminator and one for the year) is odd we add another null terminator
+  if((length +2) % 2 != 0)
+    movieIterator++;
+  short * numberOfActors = (short *) movieIterator;
+  //add 2 bytes representing the numberOfActors casting in the movie
+  numberOfActors++;
+  int * offsets = (int *) numberOfActors;
+ for(short i = 0; i< *numberOfMovies; i++){
+   int offset = *offsets++;
+   char * playerName = (char*) actorFile + offset;
+   players.push_back(string(playerName));
+ }
+  
+ return true;
+ }
 imdb::~imdb()
 {
   releaseFileMap(actorInfo);

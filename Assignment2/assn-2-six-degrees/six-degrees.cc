@@ -31,7 +31,12 @@ static string promptForActor(const string& prompt, const imdb& db)
     getline(cin, response);
     if (response == "") return "";
     vector<film> credits;
-    if (db.getCredits(response, credits)) return response;
+    vector<string> players;
+ film movie;
+      movie.title = "Bitter Jester";
+      movie.year = 10;
+      db.getCast(movie,players);
+    // if (db.getCredits(response, credits)) return response;
     cout << "We couldn't find \"" << response << "\" in the movie database. "
 	 << "Please try again." << endl;
   }
@@ -72,7 +77,9 @@ int main(int argc, const char *argv[])
       // replace the following line by a call to your generateShortestPath routine... 
       cout << endl << "No path between those two people could be found." << endl << endl;
       vector<film> films;
+      vector<string> players;
       db.getCredits("asd", films);
+     
     }
   }
   

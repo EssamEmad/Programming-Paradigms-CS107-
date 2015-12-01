@@ -76,6 +76,7 @@ class imdb {
 
   /**
    * Destructor: ~imdb
+
    * -----------------
    * Releases any resources associated with the imdb.
    * Self-explantory.
@@ -88,7 +89,7 @@ class imdb {
   static const char *const kMovieFileName;
   const void *actorFile;
   const void *movieFile;
-  void* binarySearch(const char* player,int start, int end) const;
+  void* binarySearch(const char* player,int start, int end,int actor) const;
   void * getPointerToMovieOffsets(const char * actorChar) const;
   film getFilm(const int  pointer)const;
  // everything below here is complicated and needn't be touched.

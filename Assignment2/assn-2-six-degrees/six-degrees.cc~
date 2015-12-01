@@ -71,7 +71,13 @@ int main(int argc, const char *argv[])
     } else {
       // replace the following line by a call to your generateShortestPath routine... 
       cout << endl << "No path between those two people could be found." << endl << endl;
-      db.getCredits("asd", NULL);
+      vector<film> films;
+      vector<string> players;
+      db.getCredits("asd", films);
+      film movie;
+      movie.title = "Bitter Jester";
+      movie.year = 10;
+      db.getCast(movie,players);
     }
   }
   
