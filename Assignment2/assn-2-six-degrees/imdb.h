@@ -90,7 +90,7 @@ class imdb {
   const void *movieFile;
   void* binarySearch(const char* player,int start, int end) const;
   void * getPointerToMovieOffsets(const char * actorChar) const;
-  film getFilm(const short  pointer)const;
+  film getFilm(const int  pointer)const;
  // everything below here is complicated and needn't be touched.
   // you're free to investigate, but you're on your own.
   struct fileInfo {

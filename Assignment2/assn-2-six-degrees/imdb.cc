@@ -49,9 +49,9 @@ bool imdb::getCredits(const string& player, vector<film>& films) const {
   short *numberOfMovies = (short*) actorChar;
   actorChar +=2;
  // to get the offsets add 2 bytes if the string length + 2 bytes (short storing number of movies) is not a multiple of 4
-  if( (stringLength + 2) % 4 != 0)
-    actorChar += 2;
-  short * movieOffsets = (short*) actorChar;
+    if( (stringLength + 2) % 4 != 0)
+      actorChar += 2;
+  int * movieOffsets = (int*) actorChar;
   //iterate on all the movies and add them to the fimls vector
   for(int i = 0; i< *numberOfMovies; i++){
     film newFilm = getFilm(*movieOffsets);
@@ -61,21 +61,20 @@ bool imdb::getCredits(const string& player, vector<film>& films) const {
   }
  return true;
  }
-film imdb::getFilm(const short  pointer)const{
+film imdb::getFilm(const int  pointer)const{
   film returnFilm;
   char * movieName = (char*) movieFile + pointer;
   char * moviePointer = movieName;
   int movieNameLength = 0;
   //move the pointer after the null character
-  while(moviePointer != '\0'){
+  while(*moviePointer != '\0'){
     moviePointer ++;
     movieNameLength++;
   }
-  if( movieNameLength %2 != 0)
-    moviePointer +=2;
-  else
-    moviePointer ++;
- returnFilm.year = 1990 + *movieName;
+  //reached the end of the name and pointing to the null terminator
+  moviePointer++;
+  
+ returnFilm.year = 1990 + *moviePointer;
   returnFilm.title = string(movieName);
   return returnFilm;
 }
