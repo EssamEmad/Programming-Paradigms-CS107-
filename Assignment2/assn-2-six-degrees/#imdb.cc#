@@ -119,7 +119,7 @@ bool imdb::getCast(const film& movie, vector<string>& players) const {
   //add 2 bytes representing the numberOfActors casting in the movie
   movieIterator += 2;
   int * offsets = (int *) movieIterator;
- for(int i = 0; i< *numberOfMovies; i++){
+ for(short i = 0; i< *numberOfMovies; i++){
    int offset = *offsets++;
    char * playerName = (char*) actorFile + offset;
    players.push_back(string(playerName));
