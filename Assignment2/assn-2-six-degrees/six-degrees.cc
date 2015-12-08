@@ -41,6 +41,31 @@ static string promptForActor(const string& prompt, const imdb& db)
 	 << "Please try again." << endl;
   }
 }
+/**
+ *Method: generateShortestPath
+ * implements a breadth first search to find a path
+ * between 2 actors
+ * @param firstActor the name of the first actor
+ * @param secondActor the name of the second actor
+ * @param imdb a reference to the imdb object
+ */
+void generateShortestPath(string firstActor, string secondActor, Imdb *imdb){
+  list<path> partialPaths;
+  set<string> previouslySeenActors;
+  set<string> previouslySeenMovies;
+  path firstPath(firstActor);
+  partialPaths.push_back(firstPath);
+  while(!partialPaths.isEmpty && partialPaths.front().getLength() <= 5){
+    path front = partialPaths.pop_front();
+    string *lastPlayer = front.getLastPlayer();
+    vector<film> lastPlayerFilms();
+    imdb->getCredits(*lastPlayer, lastPlayerFilms);
+    //for each movie in the list of movies
+    for(int i = 0; i < lastPlayerFilms.size(); i++){
+      film currentFilm = lastPlayerFilms[i];
+      
+  }
+}
 
 /**
  * Serves as the main entry point for the six-degrees executable.
