@@ -1,0 +1,17 @@
+#include<stdio.h>
+
+typedef enum {
+  Integer, String, List, NULL
+} nodeType;
+ nodeType *root;
+  struct node {
+    nodeType type;
+    void * content;
+  }
+  node * base;
+  base->type = List;
+  base-> content = malloc(sizeof(node * 2));
+
+int main(){
+  
+}
