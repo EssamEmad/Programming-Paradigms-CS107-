@@ -10,7 +10,7 @@ void VectorNew(vector *v, int elemSize, VectorFreeFunction freeFn, int initialAl
   v->count = 0;
   v->capacity = 4;
   v->elems = malloc(elemSize * 4);
-  // assert(v->elems == NULL);
+  assert(v->elems != NULL);
   v->freeFunc = freeFn;
 }
 
@@ -32,14 +32,14 @@ void *VectorNth(const vector *v, int position)
 {
   // assert(position < 0 || position > v->count);
   void * element = (char*) v->elems + position * v->elemSize;
-  // assert(element == NULL);
+  assert(element != NULL);
   return element;
  }
 
 void VectorReplace(vector *v, const void *elemAddr, int position)
 {
   void  * element = (char*) v->elems + position * v->elemSize;
-  assert(element == NULL);
+  assert(element != NULL);
   memcpy(element, elemAddr, v->elemSize);
 }
 
@@ -50,7 +50,7 @@ void VectorInsert(vector *v, const void *elemAddr, int position)
     expand(v);
   void * moveFrom = (char *) v->elems + position * v->elemSize;
   void *moveTo = (char*) moveFrom + v->elemSize;
-  memmove(moveTo, moveFrom, (v->count - position)* v-> elemSize);
+  memmove(moveTo, moveFrom, (v->count - position-1)* v-> elemSize);
   memcpy(moveFrom, elemAddr, v->elemSize);
   v->count++;
 }
@@ -65,7 +65,15 @@ void VectorAppend(vector *v, const void *elemAddr)
 }
 
 void VectorDelete(vector *v, int position)
-{}
+{
+  assert(position > 0 && position < v->count);
+  void *indexToDelete = (char*) v-> elems + v->elemSize * position;
+  void *elementAfter = (char*) indexToDelete + v->elemSize;
+  int sizeToBeMoved = v->count - position - 1;
+  sizeToBeMoved *= v->elemSize;
+  memcpy(indexToDelete, elementAfter, sizeToBeMoved);
+  v->count--;
+}
 
 void VectorSort(vector *v, VectorCompareFunction compare)
 {}
@@ -75,7 +83,7 @@ void VectorMap(vector *v, VectorMapFunction mapFn, void *auxData)
 void expand(vector *v){
   v->capacity += 4;
   v->elems = realloc(v->elems, (v->capacity) * v->elemSize);
-  assert(v->elems == NULL);
+  assert(v->elems != NULL);
 }
 static const int kNotFound = -1;
 int VectorSearch(const vector *v, const void *key, VectorCompareFunction searchFn, int startIndex, bool isSorted)

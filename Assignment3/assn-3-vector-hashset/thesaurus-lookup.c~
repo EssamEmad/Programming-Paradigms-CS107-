@@ -237,6 +237,17 @@ int main(int argc, const char *argv[])
   x++;
 
   VectorAppend(&v,&x);
-  int n = VectorNth(&v,1);
+  int *n =(int *) VectorNth(&v,1);
+  x += 3;
+  VectorInsert(&v,&x,1);
+  n = (int *) VectorNth(&v,1);
+  n = (int *) VectorNth(&v,2);
+  // testing expand
+  x = 16;
+  VectorAppend(&v,&x);
+  VectorAppend(&v,&x);
+  n = (int*) VectorNth(&v,1);
+  VectorDelete(&v,1);
+  n = (int*) VectorNth(&v,1);
   return 0;
 }
