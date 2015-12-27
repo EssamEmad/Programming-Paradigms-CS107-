@@ -8,7 +8,7 @@ void VectorNew(vector *v, int elemSize, VectorFreeFunction freeFn, int initialAl
 {
   v->elemSize = elemSize;
   v->count = 0;
-  v->capacity = 4;
+  v->capacity = initialAllocation;
   v->elems = malloc(elemSize * 4);
   assert(v->elems != NULL);
   v->freeFunc = freeFn;
@@ -85,7 +85,13 @@ void VectorSort(vector *v, VectorCompareFunction compare)
 }
 
 void VectorMap(vector *v, VectorMapFunction mapFn, void *auxData)
-{}
+{
+  assert(mapFn != NULL);
+  for(int i = 0; i < v->count; i++){
+    void * elem = (char*) v->elems + i*v->elemSize;
+    mapFn(elem,auxData);
+  }
+}
 void expand(vector *v){
   v->capacity += 4;
   v->elems = realloc(v->elems, (v->capacity) * v->elemSize);
@@ -94,23 +100,26 @@ void expand(vector *v){
 static const int kNotFound = -1;
 int VectorSearch(const vector *v, const void *key, VectorCompareFunction searchFn, int startIndex, bool isSorted)
 {
-  assert(startIndex>0 && startIndex < v->size && searchFn != NULL);
+  assert(startIndex>=0 && startIndex < v->count && searchFn != NULL);
   void *base = (char*) v-> elems + startIndex * v->elemSize;
   //perform a binary search using c function bsearch if the data is sorted
   if(isSorted){
    void *found =  bsearch(key, base,v->count - startIndex, v->elemSize, searchFn);
    if(found == NULL)
      return -1;
-   else
-     return found - v->elems;
+   else{
+     int diff =  found - v->elems;
+     return diff/ v->elemSize;
+   }
   } else{
     //if not sorted
     for(int i = startIndex; i < v->count; i++){
       base = (char*) v->elems + i * v->elemSize;
-      if(searchFn(found, key) == 0)
+      if(searchFn(base, key) == 0)
 	return i;
     }
 
  return -1;
+  }
 
  } 

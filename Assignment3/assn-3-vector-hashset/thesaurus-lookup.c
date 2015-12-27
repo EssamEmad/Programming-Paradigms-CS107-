@@ -221,6 +221,17 @@ static void QueryThesaurus(hashset *thesaurus)
  */
 
 static const int kApproximateWordCount = (1 << 19) - 1; // six-digit Marsenne prime
+int compareInt( const void* first,const void*second){
+  int *firstElement = (int*) first;
+  int *secondElement = (int*) second;
+  return *firstElement - * secondElement;
+}
+
+void mapFunction(const void* first, void* auxData){
+  int * element = (int*) first;
+  *element = 5;
+}
+
 int main(int argc, const char *argv[])
 {
   /*  hashset thesaurus;
@@ -232,13 +243,31 @@ int main(int argc, const char *argv[])
   HashSetDispose(&thesaurus);*/
   vector v;
   VectorNew(&v,4,NULL,4);
-  int  x = 4;
-  VectorAppend(&v,&x);
-  x++;
+  for(int i = 9; i>=0; i--){
+    VectorAppend(&v,&i);
+  }
+  printf("Length = %d", VectorLength(&v));
+  VectorSort(&v, compareInt);
+  printf("Printing the vector after sorting\n");
+  for(int i = 0; i < VectorLength(&v); i++){
+    int * element = (int*) VectorNth(&v,i);
+    printf("%d\n", *element);
+  }
+  printf("Performing a binary search on element 5");
+  int searchingReference = 5;
+  int elementIndex = VectorSearch(&v,&searchingReference, compareInt,0,true);
+  printf("the element is at index: %d", elementIndex);
+  printf("\n testing mapping\n");
+  VectorMap(&v, mapFunction, NULL);
+  for(int i = 0; i < VectorLength(&v); i++){
+   int * element = (int*) VectorNth(&v,i);
+    printf("%d\n", *element);
+  }
 
-  VectorAppend(&v,&x);
+  // VectorAppend(&v,&x);
   int *n =(int *) VectorNth(&v,1);
-  x += 3;
+	   int x = 0;
+ x += 3;
   VectorInsert(&v,&x,1);
   n = (int *) VectorNth(&v,1);
   n = (int *) VectorNth(&v,2);
@@ -254,5 +283,5 @@ int main(int argc, const char *argv[])
   return 0;
 }
 //4,5,
-//4,1,5,16
+//4,8,5,16
 //4,5,16
