@@ -85,7 +85,9 @@ void VectorSort(vector *v, VectorCompareFunction compare)
 }
 
 void VectorMap(vector *v, VectorMapFunction mapFn, void *auxData)
-{}
+{
+
+}
 void expand(vector *v){
   v->capacity += 4;
   v->elems = realloc(v->elems, (v->capacity) * v->elemSize);
