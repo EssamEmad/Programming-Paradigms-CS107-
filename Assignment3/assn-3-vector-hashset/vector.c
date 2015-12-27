@@ -50,8 +50,11 @@ void VectorInsert(vector *v, const void *elemAddr, int position)
     expand(v);
   void * moveFrom = (char *) v->elems + position * v->elemSize;
   void *moveTo = (char*) moveFrom + v->elemSize;
-  memmove(moveTo, moveFrom, (v->count - position-1)* v-> elemSize);
+  int size = (v->count - position) * v->elemSize;
+  memmove(moveTo, moveFrom, size);
   memcpy(moveFrom, elemAddr, v->elemSize);
+  int *from = (int*) moveFrom;
+  int *to = (int*) moveTo;
   v->count++;
 }
 
@@ -71,7 +74,7 @@ void VectorDelete(vector *v, int position)
   void *elementAfter = (char*) indexToDelete + v->elemSize;
   int sizeToBeMoved = v->count - position - 1;
   sizeToBeMoved *= v->elemSize;
-  memcpy(indexToDelete, elementAfter, sizeToBeMoved);
+  memmove(indexToDelete,elementAfter,sizeToBeMoved);
   v->count--;
 }
 

@@ -50,8 +50,11 @@ void VectorInsert(vector *v, const void *elemAddr, int position)
     expand(v);
   void * moveFrom = (char *) v->elems + position * v->elemSize;
   void *moveTo = (char*) moveFrom + v->elemSize;
-  memmove(moveTo, moveFrom, (v->count - position-1)* v-> elemSize);
+  int size = (v->count - position -1) * v->elemSize;
+  void * temp = malloc(size);
+  memcpy(temp,moveFrom,size);
   memcpy(moveFrom, elemAddr, v->elemSize);
+  memcpy(moveTo,temp,size);
   v->count++;
 }
 
@@ -70,7 +73,9 @@ void VectorDelete(vector *v, int position)
   void *indexToDelete = (char*) v-> elems + v->elemSize * position;
   void *elementAfter = (char*) indexToDelete + v->elemSize;
   int sizeToBeMoved = v->count - position - 1;
-  memmove(indexToDelete, elementAfter, sizeToBeMoved* v-> elemSize);
+  sizeToBeMoved *= v->elemSize;
+  memmove(indexToDelete,elementAfter,sizeToBeMoved);
+  v->count--;
 }
 
 void VectorSort(vector *v, VectorCompareFunction compare)

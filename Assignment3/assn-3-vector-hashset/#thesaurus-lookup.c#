@@ -244,11 +244,15 @@ int main(int argc, const char *argv[])
   n = (int *) VectorNth(&v,2);
   // testing expand
   x = 16;
-  VectorAppend(&v,&x);
+  //  VectorAppend(&v,&x);
   VectorAppend(&v,&x);
   n = (int*) VectorNth(&v,1);
   VectorDelete(&v,1);
+  n = (int*) VectorNth(&v,2);
+  n = (int*) VectorNth(&v,0);
   n = (int*) VectorNth(&v,1);
   return 0;
 }
-//4,8,5,16,16
+//4,5,
+//4,8,5,16
+//4,5,16
