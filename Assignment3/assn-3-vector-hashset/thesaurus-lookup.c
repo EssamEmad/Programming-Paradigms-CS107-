@@ -232,21 +232,43 @@ void mapFunction(const void* first, void* auxData){
   *element = 5;
 }
 
+void readFromFile(vector *v){
+  FILE * file;
+  file = fopen("v.txt","r");
+  // assert(file != NULL);
+  char ch;
+  while(ch = getc(file) != EOF){
+    int * temp = malloc(sizeof(int));
+    fscanf(file,"%d",temp);
+    VectorAppend(v,temp);
+  }
+}
+void writeToFile(vector *v){
+  FILE *file;
+  file = fopen("v.txt", "w");
+  for(int i = 0; i < VectorLength(v); i++){
+    int * element =(int*) VectorNth(v,i);
+    fprintf("%d ", *element);
+  }
+  fclose(file);
+
+}
 int main(int argc, const char *argv[])
 {
-  /*  hashset thesaurus;
+  hashset thesaurus;
   HashSetNew(&thesaurus, sizeof(thesaurusEntry), kApproximateWordCount, StringHash, StringCompare, ThesEntryFree);
   const char *thesaurusFileName = (argc == 1) ? 
-    "/usr/class/cs107/assignments/assn-3-vector-hashset-data/thesaurus.txt" : argv[1];
+    "/Users/essam/Documents/Essam/cs107/Assignment3/assn-3-vector-hashset-data/thesaurus.txt" : argv[1];
   ReadThesaurus(&thesaurus, thesaurusFileName);
   QueryThesaurus(&thesaurus);
-  HashSetDispose(&thesaurus);*/
-  vector v;
+  HashSetDispose(&thesaurus);
+  /* vector v;
   VectorNew(&v,4,NULL,4);
-  for(int i = 9; i>=0; i--){
+  readFromFile(&v);
+  /** for(int i = 9; i>=0; i--){
     VectorAppend(&v,&i);
-  }
-  printf("Length = %d", VectorLength(&v));
+    }*/
+  /* printf("Length = %d", VectorLength(&v));
   VectorSort(&v, compareInt);
   printf("Printing the vector after sorting\n");
   for(int i = 0; i < VectorLength(&v); i++){
@@ -263,9 +285,10 @@ int main(int argc, const char *argv[])
    int * element = (int*) VectorNth(&v,i);
     printf("%d\n", *element);
   }
-
+  */
+  // writeToFile(&v);
   // VectorAppend(&v,&x);
-  int *n =(int *) VectorNth(&v,1);
+  /* int *n =(int *) VectorNth(&v,1);
 	   int x = 0;
  x += 3;
   VectorInsert(&v,&x,1);
@@ -279,7 +302,7 @@ int main(int argc, const char *argv[])
   VectorDelete(&v,1);
   n = (int*) VectorNth(&v,2);
   n = (int*) VectorNth(&v,0);
-  n = (int*) VectorNth(&v,1);
+  n = (int*) VectorNth(&v,1);*/
   return 0;
 }
 //4,5,
